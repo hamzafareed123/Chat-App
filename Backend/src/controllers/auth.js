@@ -7,7 +7,6 @@ import { ENV } from "../lib/env.js";
 
 const router = express.Router();
 
-
 export const signup = async (req, res) => {
   const { fullName, email, password } = req.body;
 
@@ -58,11 +57,7 @@ export const signup = async (req, res) => {
       });
 
       try {
-        sendWelcomEmail(
-          savedUser.email,
-          savedUser.fullName,
-          ENV.CLIENT_URL
-        );
+        sendWelcomEmail(savedUser.email, savedUser.fullName, ENV.CLIENT_URL);
       } catch (error) {
         console.log("Error in Sendgin Email", error);
       }
@@ -72,3 +67,42 @@ export const signup = async (req, res) => {
     res.status(500).json({ message: "Error in Server" });
   }
 };
+
+export const signin = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "No User Find with this Email" });
+    }
+
+    const hashPassword = await bcrypt.compare(password, user.password);
+
+    if (!hashPassword) {
+      return res.status(400).json({ message: "Password doesnot match" });
+    }
+
+    generateToken(user._id, res);
+
+    res
+      .status(200)
+      .json({
+        _id: user._id,
+        fullName: user.fullName,
+        email: user.email,
+        profilePic: user.profilePic,
+      });
+  } catch (error) {
+    console.log("Server Error ",error);
+    res.status(500).json({message:"Error in Server"});
+  }
+};
+
+
+export const logout = async(_,res)=>{
+  res.cookie("jwt","",{maxAge:0})
+  res.status(200).json({message:"Logout Successfully"});
+}
