@@ -4,6 +4,7 @@ import messageRoutes from "./routes/message.route.js";
 import path from "path";
 import dbConnect from "./lib/db.js";
 import { ENV } from "./lib/env.js";
+import cookiePraser  from "cookie-parser"
 
 
 
@@ -12,6 +13,8 @@ dbConnect();
 const app = express();
 
 app.use(express.json());
+app.use(cookiePraser());
+
 app.use("/api/auth",authRoutes);
 app.use("/api/message",messageRoutes);
 
