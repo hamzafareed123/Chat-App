@@ -1,13 +1,13 @@
 import express from "express";
-import dotenv from "dotenv";
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
 import path from "path";
 import dbConnect from "./lib/db.js";
+import { ENV } from "./lib/env.js";
 
 
 
-dotenv.config();
+
 dbConnect();
 const app = express();
 
@@ -21,7 +21,7 @@ const __dirname= path.resolve();
 
 // For Deployment 
 
-if(process.env.NODE_ENV === "production"){
+if(ENV.NODE_ENV === "production"){
   app.use(express.static(path.join(__dirname,"../Frontend/dist")))
 
   app.get(/^\/.*$/,(req,res)=>{
@@ -30,6 +30,6 @@ if(process.env.NODE_ENV === "production"){
 }
 
 
-app.listen(process.env.PORT,()=>{
-    console.log(`Server Running on Port ${process.env.PORT}`);
+app.listen(ENV.PORT,()=>{
+    console.log(`Server Running on Port ${ENV.PORT}`);
 })

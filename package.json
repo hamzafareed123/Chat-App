@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/hamzafareed123/Chat-App#readme",
   "dependencies": {
-    "jsonwebtoken": "^9.0.3"
+    "jsonwebtoken": "^9.0.3",
+    "resend": "^6.6.0"
   }
 }
