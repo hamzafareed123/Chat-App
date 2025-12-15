@@ -4,9 +4,12 @@ import { signin } from "../controllers/auth.js";
 import { logout } from "../controllers/auth.js";
 import { updateProfile } from "../controllers/auth.js";
 import { protectedRoute } from "../middleware/auth.middleware.js";
+import {arcjetProtect} from "../middleware/arcjet.middleware.js"
 
 const router = express.Router();
 
+
+router.use(arcjetProtect);
 router.post("/signup",signup);
 router.post("/signin",signin);
 router.post("/logout",logout)

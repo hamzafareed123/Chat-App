@@ -103,32 +103,29 @@ export const logout = async (_, res) => {
   res.status(200).json({ message: "Logout Successfully" });
 };
 
-
-
 export const updateProfile = async (req, res) => {
   const { profilePic } = req.body;
 
- try {
-   if (!profilePic) {
-    return res.status(400).json({ message: "Profile Picture is required" });
+  try {
+    if (!profilePic) {
+      return res.status(400).json({ message: "Profile Picture is required" });
+    }
+
+    const cloudinaryResponse = await cloudinary.uploader.upload(profilePic);
+    const userId = req.user._id;
+
+    const updateUser = await User.findByIdAndUpdate(
+      userId,
+      { profilePic: cloudinaryResponse.secure_url },
+      { new: true }
+    );
+
+    res.status(200).json(updateUser);
+  } catch (error) {
+    res.status(500).json({ message: "Internal server Error" });
   }
-
-  const cloudinaryResponse = await cloudinary.uploader.upload(profilePic);
-  const userId = req.user._id;
-
-  const updateUser = await User.findByIdAndUpdate(
-     userId ,
-    {profilePic:cloudinaryResponse.secure_url},
-    { new: true }
-  );
-
-  res.status(200).json(updateUser)
- } catch (error) {
-  res.status(500).json({message:"Internal server Error"});
- }
 };
 
-export const checkUser= async(req,res)=>{
-  res.status(200).json(req.user)
-}
-
+export const checkUser = async (req, res) => {
+  res.status(200).json(req.user);
+};

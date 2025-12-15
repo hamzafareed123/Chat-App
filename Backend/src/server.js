@@ -9,11 +9,13 @@ import cookiePraser  from "cookie-parser"
 
 
 
+
 dbConnect();
 const app = express();
 
 app.use(express.json());
 app.use(cookiePraser());
+
 
 app.use("/api/auth",authRoutes);
 app.use("/api/message",messageRoutes);
