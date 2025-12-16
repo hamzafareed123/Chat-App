@@ -42,6 +42,14 @@ export const sendMessage = async (req, res) => {
 
     let imageUrl;
 
+    if(!image && !text){
+      return res.status(400).json({message:"Image or text is required"});
+    }
+
+    if(senderId.equalls(receiverId)){
+      return res.status(400).json({message:"Cannot send message to yourself"})
+    }
+
     if (image) {
       const response = await cloudinary.uploader.upload(image);
       imageUrl = response.secure_url;
