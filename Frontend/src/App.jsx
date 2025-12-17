@@ -1,18 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import ChatPage from "./Pages/ChatPage";
 import LoginPage from "./Pages/LoginPage";
 import SignupPage from "./Pages/SignupPage";
-import { userAuthStore } from "./store/useAuthStore";
+import { useAuthStore } from "./store/useAuthStore";
+import Spinner from "./Components/Spinner";
+import {Toaster} from "react-hot-toast"
 
 function App() {
+  const { checkAuth, isCheckingAuth, authUser } = useAuthStore();
 
-  const {authUser,login,isLoggedIn}= userAuthStore()
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
-  console.log("auth User is :",authUser);
-  console.log("is Loading is:" ,isLoggedIn);
+  if(isCheckingAuth){
+    return <Spinner/>
+  }
 
+  console.log("auth user is", authUser);
   return (
     <>
       <div className="min-h-screen bg-slate-900 relative flex items-center justify-center p-4 overflow-hidden">
@@ -20,15 +27,22 @@ function App() {
         <div className="absolute top-0 -left-4 size-96 bg-pink-500 opacity-20 blur-[100px]" />
         <div className="absolute bottom-0 -right-4 size-96 bg-cyan-500 opacity-20 blur-[100px]" />
 
-        <button onClick={login} className="btn btn-primary z-10">Login</button>
         <Routes>
-          <Route path="/" element={<ChatPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
+          <Route
+            path="/"
+            element={authUser ? <ChatPage /> : <Navigate to={"/login"} />}
+          />
+          <Route
+            path="/login"
+            element={!authUser ? <LoginPage /> : <Navigate to={"/"} />}
+          />
+          <Route
+            path="/signup"
+            element={!authUser ? <SignupPage /> : <Navigate to={"/"} />}
+          />
         </Routes>
+        <Toaster/>
       </div>
-
-   
     </>
   );
 }
