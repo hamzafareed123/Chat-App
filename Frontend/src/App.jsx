@@ -6,7 +6,7 @@ import LoginPage from "./Pages/LoginPage";
 import SignupPage from "./Pages/SignupPage";
 import { useAuthStore } from "./store/useAuthStore";
 import Spinner from "./Components/Spinner";
-import {Toaster} from "react-hot-toast"
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const { checkAuth, isCheckingAuth, authUser } = useAuthStore();
@@ -15,8 +15,8 @@ function App() {
     checkAuth();
   }, [checkAuth]);
 
-  if(isCheckingAuth){
-    return <Spinner/>
+  if (isCheckingAuth) {
+    return <Spinner />;
   }
 
   console.log("auth user is", authUser);
@@ -41,7 +41,7 @@ function App() {
             element={!authUser ? <SignupPage /> : <Navigate to={"/"} />}
           />
         </Routes>
-        <Toaster/>
+        <Toaster />
       </div>
     </>
   );

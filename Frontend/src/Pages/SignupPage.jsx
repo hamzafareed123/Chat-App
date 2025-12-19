@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import BorderAnimation from "../Components/BorderAnimation";
 import { Link } from "react-router-dom";
-import signupImage from "../../public/signup.png"
+import signupImage from "/signup.png"
 import {
   MessageCircleIcon,
   LockIcon,

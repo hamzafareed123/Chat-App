@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import BorderAnimation from "../Components/BorderAnimation";
 import { useAuthStore } from "../store/useAuthStore";
-import loginImage from "../../public/login.png"
+import loginImage from "/login.png"
 import {
   MessageCircleIcon,
   LockIcon,
