@@ -118,7 +118,7 @@ export const updateProfile = async (req, res) => {
       userId,
       { profilePic: cloudinaryResponse.secure_url },
       { new: true }
-    );
+    ).select("-password");
 
     res.status(200).json(updateUser);
   } catch (error) {
@@ -127,5 +127,6 @@ export const updateProfile = async (req, res) => {
 };
 
 export const checkUser = async (req, res) => {
+  
   res.status(200).json(req.user);
 };

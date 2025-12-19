@@ -87,7 +87,7 @@ const LoginPage = () => {
                 {isLoginIn ? (
                   <LoaderIcon className="animate-spin items-center" />
                 ) : (
-                  "Create Account"
+                  "Login"
                 )}
               </button>
 
