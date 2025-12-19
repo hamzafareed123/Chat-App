@@ -28,8 +28,8 @@ const ChatPage = () => {
             <ProfileHeader />
             <ActiveTabSwitch />
 
-            <div className="flex-1 overflow-y-auto px-2">
-              {activeTab === "chats" ? <ChatList /> : <ContactList />}
+            <div className="flex-1 overflow-y-auto px-1">
+              {activeTab === "Chats" ? <ChatList /> : <ContactList />}
             </div>
           </div>
 
