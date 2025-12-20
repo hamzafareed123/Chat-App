@@ -27,8 +27,8 @@ export const useChatStore = create((set, get) => ({
   },
 
   getAllContacts: async () => {
-    set({ isUserLoading: true });
     try {
+      set({ isUserLoading: true });
       const res = await axiosInstance.get("/message/contacts");
       set({ allContacts: res.data });
     } catch (error) {
@@ -39,8 +39,8 @@ export const useChatStore = create((set, get) => ({
   },
 
   getChatPartners: async () => {
-    set({ isUserLoading: true });
     try {
+      set({ isUserLoading: true });
       const res = await axiosInstance.get("/message/chats");
       set({ chats: res.data });
     } catch (error) {
@@ -51,8 +51,21 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
-  setActiveTab:(tab)=>{
-    set({activeTab:tab})
+  setActiveTab: (tab) => {
+    set({ activeTab: tab });
+  },
+
+getMessageByUserId: async (id) => {
+  try {
+    set({ isMessageLoading: true });
+    const response = await axiosInstance.get(`/message/${id}`);
+    set({ messages: response.data });
+  } catch (error) {
+    console.log(error.response?.data || error.message);
+    toast.error(error.response?.data || "Failed to load messages");
+  } finally {
+    set({ isMessageLoading: false });
   }
+}
 
 }));

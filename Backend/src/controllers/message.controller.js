@@ -18,19 +18,25 @@ export const getAllContacts = async (req, res) => {
 
 export const getMessageByUserId = async (req, res) => {
   try {
+    if (!req.user) return res.status(401).json({ message: "Unauthorized" });
+
     const myId = req.user._id;
     const { id: senderChatId } = req.params;
 
-    const message = await Message.find({
+    if (!senderChatId)
+      return res.status(400).json({ message: "User ID required" });
+
+    const messages = await Message.find({
       $or: [
         { senderId: myId, receiverId: senderChatId },
         { senderId: senderChatId, receiverId: myId },
       ],
-    });
+    }).sort({ createdAt: 1 });
 
-    res.status(200).json(message);
+    res.status(200).json(messages);
   } catch (error) {
-    return res.status(500).json({ message: "Internal Server Issue" });
+    console.error("getMessageByUserId error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -42,12 +48,14 @@ export const sendMessage = async (req, res) => {
 
     let imageUrl;
 
-    if(!image && !text){
-      return res.status(400).json({message:"Image or text is required"});
+    if (!image && !text) {
+      return res.status(400).json({ message: "Image or text is required" });
     }
 
-    if(senderId.equalls(receiverId)){
-      return res.status(400).json({message:"Cannot send message to yourself"})
+    if (senderId.toString() === receiverId.toString()) {
+      return res
+        .status(400)
+        .json({ message: "Cannot send message to yourself" });
     }
 
     if (image) {
