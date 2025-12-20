@@ -1,18 +1,27 @@
 import React, { useEffect } from "react";
 import { useChatStore } from "../store/useChatStore";
 import profileImage from "/avatar.png";
+import LoadingSekelaton from "./LoadingSekelaton";
+import NoChatFound from "./NoChatFound";
 
 const ChatList = () => {
-  const { getChatPartners, chats } = useChatStore();
+  const { setSelectedUser,getChatPartners, chats,isUserLoading,getMessageByUserId } = useChatStore();
 
-  useEffect(() => {
-    getChatPartners();
-  }, []);
+
+
+  if(isUserLoading){
+    return <LoadingSekelaton/>
+  }
+
+  if(chats.length===0){
+    return <NoChatFound/>
+  }
 
   return (
     <div className="flex flex-col">
           {chats.map((chat) => (
             <div
+            onClick={()=>setSelectedUser(chat)}
               key={chat._id}
               className="flex items-center gap-3 p-3 mb-1 rounded-lg bg-slate-900 hover:bg-slate-700 cursor-pointer"
             >

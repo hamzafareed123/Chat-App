@@ -1,19 +1,31 @@
 import React, { useEffect } from 'react'
 import { useChatStore } from '../store/useChatStore'
 import profileImage from "/avatar.png";
+import LoadingSekelaton from './LoadingSekelaton';
+import NoContactFound from './NoContactFound';
 
 const ContactList = () => {
-  const {getAllContacts,allContacts} = useChatStore();
+  const {getAllContacts,allContacts,isUserLoading,selectedUser, setSelectedUser} = useChatStore();
 
-  console.log("all Contact are:",allContacts)
+ 
   useEffect(()=>{
     getAllContacts();
   },[getAllContacts])
+
+  if(isUserLoading){
+    return <LoadingSekelaton/>
+  }
+
+  if(allContacts.length===0){
+    return <NoContactFound/>
+  }
 
   return (
       <div className="flex flex-col">
       {allContacts.map((Contact) => (
         <div
+        onClick={()=>setSelectedUser(Contact)}
+        
           key={Contact._id}
           className="flex items-center gap-3 p-3 mb-1 rounded-lg bg-slate-900 hover:bg-slate-700 cursor-pointer"
         >
