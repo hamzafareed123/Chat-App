@@ -6,9 +6,10 @@ import dbConnect from "./lib/db.js";
 import { ENV } from "./lib/env.js";
 import cookiePraser from "cookie-parser";
 import cors from "cors";
+import {server,app} from "./lib/socket.io.js";
 
 dbConnect();
-const app = express();
+
 
 app.use(
   cors({
@@ -36,6 +37,6 @@ if (ENV.NODE_ENV === "production") {
   });
 }
 
-app.listen(ENV.PORT, () => {
+server.listen(ENV.PORT, () => {
   console.log(`Server Running on Port ${ENV.PORT}`);
 });

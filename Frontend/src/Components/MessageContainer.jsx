@@ -6,13 +6,17 @@ import NoMessageContainer from "./NoMessageContainer";
 import NoChat from "./NoChat";
 import AllChats from "./AllChats";
 import InputBox from "./InputBox";
+import { useAuthStore } from "../store/useAuthStore";
 
 const MessageContainer = () => {
   const { selectedUser, setSelectedUser, getMessageByUserId, messages } =
     useChatStore();
+  const { onLineUser } = useAuthStore();
 
   useEffect(() => {
-    getMessageByUserId(selectedUser._id);
+    if (selectedUser?._id) {
+      getMessageByUserId(selectedUser._id);
+    }
   }, [selectedUser, getMessageByUserId]);
 
   if (!selectedUser) return null;
@@ -25,20 +29,26 @@ const MessageContainer = () => {
     <div className="flex flex-col h-full">
       {/* Header */}
       <div className="h-16 px-4 flex items-center gap-3 border-b border-slate-700 bg-slate-800">
-        <div className="relative">
+        <div
+          className={`avatar ${
+            onLineUser.includes(selectedUser._id?.toString())
+              ? "avatar-online"
+              : "avatar-offline"
+          }`}
+        >
           <img
             src={selectedUser.profilePic || avatar}
             alt="Profile"
             className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover"
           />
-          <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-slate-800 rounded-full"></span>
         </div>
+        {/*  */}
 
         <div className="flex flex-col min-w-0">
           <h4 className="font-semibold text-sm sm:text-base truncate text-slate-200">
             {selectedUser.fullName}
           </h4>
-          <span className="text-slate-400 text-xs">Online</span>
+          <span className="text-slate-400 text-xs">{`${onLineUser.includes(selectedUser._id)? "Online":"Offline"}`}</span>
         </div>
 
         <X
@@ -47,7 +57,6 @@ const MessageContainer = () => {
         />
       </div>
 
-      
       <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-900">
         {/* messages */}
 
@@ -60,7 +69,7 @@ const MessageContainer = () => {
 
       {/* Input */}
       <div className="p-4 border-t border-slate-700 bg-slate-800">
-        <InputBox/>
+        <InputBox />
       </div>
     </div>
   );
