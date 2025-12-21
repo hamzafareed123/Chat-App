@@ -19,7 +19,7 @@ const messageSchema = new mongoose.Schema({
         maxlength:2000
     },
 
-    image:{
+    imageUrl:{
         type:String
     }
 },{timestamps:true});
