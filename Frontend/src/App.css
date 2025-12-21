@@ -37,3 +37,8 @@
   @apply  bg-cyan-500 text-white rounded-xl py-2.5 font-medium text-sm cursor-pointer
   hover:bg-cyan-600 focus:ring-2 focus:ring-cyan-500;
 }
+
+.send-btn {
+  @apply  bg-cyan-800 text-white rounded-xl py-2.5 font-medium text-sm cursor-pointer
+  hover:bg-cyan-600 focus:ring-2 focus:ring-cyan-500;
+}

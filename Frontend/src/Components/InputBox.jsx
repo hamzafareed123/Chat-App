@@ -1,10 +1,14 @@
 import React, { useRef, useState } from "react";
 import { SendHorizonal, Image, X } from "lucide-react";
+import useKeyboardSound from "../hooks.jsx/useKeyboardSound";
+import { useChatStore } from "../store/useChatStore";
 
 const InputBox = ({ onSend }) => {
   const [text, setText] = useState("");
   const [image, setImage] = useState(null);
   const fileRef = useRef(null);
+  const { playRandomSound } = useKeyboardSound();
+  const { messages, send,isSound } = useChatStore();
 
   const handleImage = (e) => {
     const file = e.target.files[0];
@@ -17,27 +21,30 @@ const InputBox = ({ onSend }) => {
 
   const handleSend = () => {
     if (!text.trim() && !image) return;
+    if(isSound) playRandomSound();
+
     onSend?.({ text, image });
+
+    const payload = { text, image };
+    send(payload);
     setText("");
     setImage(null);
   };
 
   return (
     <div className="bg-slate-800 p-3">
-      
-    
       {image && (
         <div className="relative mb-3 w-fit">
           <img
             src={image}
-            alt="preview" 
+            alt="preview"
             className="max-w-55 max-h-55  rounded-xl object-cover"
           />
           <button
             onClick={() => setImage(null)}
             className="absolute -top-2 -right-2 bg-black/80 text-white rounded-full p-1"
           >
-            <X size={14}  className="cursor-pointer"/>
+            <X size={14} className="cursor-pointer" />
           </button>
         </div>
       )}
@@ -68,10 +75,7 @@ const InputBox = ({ onSend }) => {
           className="hidden"
         />
 
-        <button
-          onClick={handleSend}
-          className="contact-btn px-3"
-        >
+        <button onClick={handleSend} className="send-btn px-3">
           <SendHorizonal />
         </button>
       </div>
