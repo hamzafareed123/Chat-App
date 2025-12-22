@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
-import {io} from "socket.io-client"
+import { io } from "socket.io-client";
 
 const BASE_URL = "http://localhost:8000";
 
@@ -33,7 +33,7 @@ export const useAuthStore = create((set, get) => ({
       const response = await axiosInstance.post("/auth/signup", data);
       set({ authUser: response.data });
       toast.success("Account Created Successfully");
-      get().connectSocket()
+      get().connectSocket();
     } catch (error) {
       toast.error(error?.response?.data?.message || "Signup failed");
     } finally {
