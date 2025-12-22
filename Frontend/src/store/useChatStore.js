@@ -85,31 +85,59 @@ export const useChatStore = create((set, get) => ({
       isOptimistic: true,
     };
 
-    
     set((state) => ({
       messages: [...state.messages, optimisticMessage],
     }));
 
     try {
-     
       const response = await axiosInstance.post(
         `/message/send/${selectedUser._id}`,
         data
       );
 
-    
       set((state) => ({
         messages: state.messages.map((msg) =>
           msg._id === tempId ? response.data : msg
         ),
       }));
     } catch (error) {
-  
       set((state) => ({
         messages: state.messages.filter((msg) => msg._id !== tempId),
       }));
 
       toast.error(error.response?.data || "Message failed to send");
     }
+  },
+
+  subscribeToMessage: () => {
+    const socket = useAuthStore.getState().socket;
+
+    socket.off("newMessage"); // prevent duplicates
+
+    socket.on("newMessage", (newMessage) => {
+      const { selectedUser, messages, isSound } = get();
+      const { authUser } = useAuthStore.getState();
+
+      const isCurrentChat =
+        (newMessage.senderId === selectedUser?._id &&
+          newMessage.receiverId === authUser._id) ||
+        (newMessage.senderId === authUser._id &&
+          newMessage.receiverId === selectedUser?._id);
+
+      if (!isCurrentChat) return;
+
+      set({ messages: [...messages, newMessage] });
+
+      if (isSound) {
+      }
+      const audio = new Audio("/Sound/notification.mp3");
+      audio.currentTime = 0;
+      audio.play().catch(() => {});
+    });
+  },
+
+  unSucribeFromMessage: () => {
+    const socket = useAuthStore.getState().socket;
+    socket.off("newMessage");
   },
 }));

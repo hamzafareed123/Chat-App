@@ -9,15 +9,26 @@ import InputBox from "./InputBox";
 import { useAuthStore } from "../store/useAuthStore";
 
 const MessageContainer = () => {
-  const { selectedUser, setSelectedUser, getMessageByUserId, messages } =
-    useChatStore();
+  const {
+    selectedUser,
+    setSelectedUser,
+    getMessageByUserId,
+    messages,
+    subscribeToMessage,
+    unSucribeFromMessage,
+  } = useChatStore();
   const { onLineUser } = useAuthStore();
 
   useEffect(() => {
-    if (selectedUser?._id) {
-      getMessageByUserId(selectedUser._id);
-    }
-  }, [selectedUser, getMessageByUserId]);
+    if (!selectedUser?._id) return;
+
+    getMessageByUserId(selectedUser._id);
+    subscribeToMessage();
+
+    return () => {
+      unSucribeFromMessage();
+    };
+  }, [selectedUser]);
 
   if (!selectedUser) return null;
 
@@ -48,7 +59,9 @@ const MessageContainer = () => {
           <h4 className="font-semibold text-sm sm:text-base truncate text-slate-200">
             {selectedUser.fullName}
           </h4>
-          <span className="text-slate-400 text-xs">{`${onLineUser.includes(selectedUser._id)? "Online":"Offline"}`}</span>
+          <span className="text-slate-400 text-xs">{`${
+            onLineUser.includes(selectedUser._id) ? "Online" : "Offline"
+          }`}</span>
         </div>
 
         <X
